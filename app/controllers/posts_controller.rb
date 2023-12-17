@@ -1,9 +1,6 @@
 class PostsController < ApplicationController
-    before_action :require_login, only: [:new, :create]
-
-
     # Ensures that the user is authenticated before accessing any actions in the PostsController.
-    before_action :authenticate_user!
+    before_action :authenticate_user!, except: [:index]
 
 
     def new
@@ -23,17 +20,10 @@ class PostsController < ApplicationController
 
     def index
         @posts = Post.all
+        @members = User.all
     end
 
     private
-
-    def require_login
-      if current_user.logged_in?
-      # allow the user to perform the action they wanted
-      else
-        redirect_to login_path
-      end
-    end
 
     def post_params
         params.require(:post).permit(:message)
